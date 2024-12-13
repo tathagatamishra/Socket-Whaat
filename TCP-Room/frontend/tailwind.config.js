@@ -24,9 +24,6 @@ module.exports = {
           "100%": { transform: "translateX(calc(-100% - 32px))" },
         },
       },
-      // backgroundImage: {
-      //   gradientradial: 'radial-gradient(var(--tw-gradient-stops))',
-      // }
     },
     screens: {
       fd: "280px",
