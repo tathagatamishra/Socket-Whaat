@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { sendMessage } = require("../controller/socketCtrl");
+const { createUser, userLogin } = require("../controller/socketCtrl");
 
 
 router.get("/", (req, res) => {
@@ -10,6 +10,7 @@ router.get("/", (req, res) => {
 });
 
 
-router.post("/send", sendMessage);
+router.post("/signup", createUser);
+router.get("/login", userLogin);
 
 module.exports = router;

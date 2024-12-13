@@ -4,17 +4,8 @@ import { useState, useEffect } from "react";
 import "../app/globals.css";
 
 export default function Room() {
-//   setInterval(() => {
-//     console.log("hello");
-//   }, 1000);
 
 const [message, setMessage] = useState("");
-
-const sendMessage = async () => {
-    try {
-        const 
-    }
-};
 
 useEffect(() => {
     
@@ -30,7 +21,7 @@ useEffect(() => {
         <input
           type="text"
           placeholder="Enter text here"
-          className="text-2xl sm:text-3xl text-black"
+          className="text-2xl sm:text-3xl"
         />
         <button className="text-2xl sm:text-3xl border p-2 sm:p-4 rounded-md bg-slate-900 active:bg-slate-800 active:scale-95">
           Send
