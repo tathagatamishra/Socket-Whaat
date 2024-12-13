@@ -7,3 +7,13 @@ exports.sendMessage = (req, res) => {
         console.log(error);
     }
 }
+
+exports.createUser = (req, res) => {
+    try {
+        let username = req.body.username;
+        console.log(username);
+        return res.send({ username: username });
+    } catch (error) {
+        console.log(error);
+    }
+}
