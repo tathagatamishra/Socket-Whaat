@@ -7,14 +7,14 @@ export default function Room() {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const preChat = [
-    "If u already hav ur Socket Name & Password, then just use that",
-    "Or if u want to create a new one",
-    "Doesnt matter, just type ur Socket Name",
+    "If you already have your Socket Name & Password, then just use that",
+    "Or if you want to create a new one",
+    "Doesn't matter, just type your Socket Name",
     "And Password",
   ];
 
   useEffect(() => {
-    setMessages(preChat[0]);
+    setMessages([preChat[0]]);
   }, []);
 
   useEffect(() => {
@@ -57,7 +57,16 @@ export default function Room() {
         ))}
       </div>
 
-      <div className="w-full">GitHub</div>
+      <div className="w-full text-center text-white">
+        <a
+          href="https://github.com/your-username/your-repo"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          GitHub
+        </a>
+      </div>
     </div>
   );
 }

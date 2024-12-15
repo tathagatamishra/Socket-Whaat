@@ -17,9 +17,31 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  background-image: radial-gradient(#201818 2px, transparent 0%);
+  background-size: 15px 15px;
+  background-repeat: repeat;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 input {
   color: var(--background);
+}
+
+.message {
+  transition: 100ms;
+  animation-name: anim;
+  animation-duration: 600ms;
+  animation-timing-function: ease-in-out;
+}
+
+@keyframes anim {
+  from {
+    filter: opacity(50%);
+    transform: translateY(50%);
+  }
+  
+  to {
+    filter: opacity(100%);
+    transform: translateY(0%);
+  }
 }
