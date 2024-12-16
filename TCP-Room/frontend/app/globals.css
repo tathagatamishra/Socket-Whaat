@@ -23,6 +23,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+* {
+  transition: 300ms;
+}
+
 input {
   color: var(--background);
 }
@@ -37,9 +41,9 @@ input {
 @keyframes anim {
   from {
     filter: opacity(50%);
-    transform: translateY(50%);
+    transform: translateY(60%);
   }
-  
+
   to {
     filter: opacity(100%);
     transform: translateY(0%);
