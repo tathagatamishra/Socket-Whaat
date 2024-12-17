@@ -21,6 +21,20 @@ body {
   background-size: 15px 15px;
   background-repeat: repeat;
   font-family: Arial, Helvetica, sans-serif;
+  overflow-x: hidden;
+}
+
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 5px;
+  background: #171717;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: linear-gradient(0deg, #ff000000, #000);
+  border-top: solid 2px red;
+  border-radius: 50px;
+  /* border-bottom: solid 6px red; */
 }
 
 * {
@@ -37,6 +51,7 @@ input {
   animation-duration: 600ms;
   animation-timing-function: ease-in-out;
 }
+
 .my-message {
   transition: 100ms;
   animation-name: anim;

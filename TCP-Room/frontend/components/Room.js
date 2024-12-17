@@ -1,6 +1,7 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "../app/globals.css";
+import axios from "axios";
 
 export default function Room() {
   const [messages, setMessages] = useState([]);
@@ -18,6 +19,11 @@ export default function Room() {
     "And Password",
   ];
 
+  const messagesEndRef = useRef(null);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
     setMessages([preChat[0]]);
   }, []);
@@ -34,32 +40,53 @@ export default function Room() {
     return () => clearTimeout(timer);
   }, [messages, preChat, socketId]);
 
-
-  useEffect(() => {
-    socketId !== "" &&
-      setMessages((prevMessages) => [...prevMessages, socketId]);
-
-    socketPass !== "" &&
-      setMessages((prevMessages) => [...prevMessages, socketPass]);
-  }, [socketId, socketPass]);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (IdInput) {
-      setSocketId(userMessage);
-      setIdInput(false);
-      setPassInput(true);
-      setUserMessage("");
-    } else if (PassInput) {
-      setSocketPass(userMessage);
-      // setIdInput(false);
-      setPassInput(false);
-      setUserMessage("");
+  const handleSubmit = () => {
+    if (userMessage !== "") {
+      if (IdInput) {
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setSocketId(userMessage);
+        setIdInput(false);
+        setPassInput(true);
+        setUserMessage("");
+      } else if (PassInput) {
+        setMessages((prevMessages) => [...prevMessages, userMessage]);
+        setSocketPass(userMessage);
+        // setIdInput(false);
+        setPassInput(false);
+        setUserMessage("");
+      }
     }
   };
 
+  const signUp = async () => {
+    try {
+      await axios.post("http://localhost:4000/signup", {
+        username: socketId,
+        password: socketPass,
+      });
+      setTimeout(() => {
+        setMessages((prevMessages) => [...prevMessages, "Welcome to TCP Room"]);
+      }, 2000);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    if (socketId !== "" && socketPass !== "") {
+      signUp();
+    }
+  }, [socketPass]);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   return (
-    <div className="flex flex-col justify-between gap-[40px] items-center min-h-screen p-[40px]">
+    <div
+      className="flex flex-col justify-between items-center p-[40px] w-full h-screen"
+      // style={{ boxShadow: "0px 80px 60px -50px red inset" }}
+    >
       <h1
         className="text-center text-[50px] font-[600] text-[#ffffff] font-[family-name:var(--font-Sawer)]"
         style={{ textShadow: "2px 2px 0px red" }}
@@ -67,10 +94,7 @@ export default function Room() {
         TCP ROOM
       </h1>
 
-      <div
-        className="flex flex-col justify-end gap-[20px] w-full  max-w-[600px] p-[20px] border overflow-y-scroll"
-        // style={{ boxShadow: "0px 80px 60px -50px red inset" }}
-      >
+      <div className="w-full max-w-[600px] h-full mt-[50px] p-[20px] py-[80px] overflow-y-scroll">
         {messages.map((message, index) => (
           <div className="w-full" key={index}>
             {message === socketId || message === socketPass ? (
@@ -90,31 +114,32 @@ export default function Room() {
             )}
           </div>
         ))}
-
-        <div
-          className="w-full flex flex-row gap-[10px] mt-[60px] z-[10]"
-          style={{
-            boxShadow: "0px -40px 50px 0px #171717",
-            background: "#171717",
-          }}
-        >
-          <input
-            className="w-full min-h-[40px] bg-[black] text-[white] rounded-[15px] px-[12px] py-[8px]"
-            type="text"
-            placeholder="Socket Name"
-            value={userMessage}
-            onChange={(e) => setUserMessage(e.target.value)}
-          />
-          <button
-            className="min-w-[40px] min-h-[40px] rounded-l-[25px] rounded-r-[50px] p-[0px] flex flex-col items-center justify-center text-center text-[black] bg-[#fff] active:scale-[90%]"
-            onClick={handleSubmit}
-          >
-            &#11166;
-          </button>
-        </div>
+        <div ref={messagesEndRef} />
       </div>
 
-      <div className="w-full">
+      <div
+        className="w-full max-w-[600px] flex flex-row gap-[10px] p-[20px] pt-[0px] z-[10]"
+        style={{
+          boxShadow: "0px -40px 50px 20px #171717",
+          background: "#171717",
+        }}
+      >
+        <input
+          className="w-full min-h-[40px] bg-[black] text-[white] rounded-[15px] px-[12px] py-[8px]"
+          type="text"
+          placeholder={IdInput ? "Socket Name" : PassInput ? "Password" : ""}
+          value={userMessage}
+          onChange={(e) => setUserMessage(e.target.value)}
+        />
+        <button
+          className="min-w-[40px] min-h-[40px] rounded-l-[25px] rounded-r-[50px] p-[0px] flex flex-col items-center justify-center text-center text-[black] bg-[#fff] active:scale-[90%]"
+          onClick={handleSubmit}
+        >
+          &#11166;
+        </button>
+      </div>
+
+      <div className="w-full mt-[40px]">
         <a
           target="_blank"
           className="text-[white]"
