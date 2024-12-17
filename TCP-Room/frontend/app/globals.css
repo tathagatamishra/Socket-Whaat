@@ -37,6 +37,12 @@ input {
   animation-duration: 600ms;
   animation-timing-function: ease-in-out;
 }
+.my-message {
+  transition: 100ms;
+  animation-name: anim;
+  animation-duration: 600ms;
+  animation-timing-function: ease-in-out;
+}
 
 @keyframes anim {
   from {

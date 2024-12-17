@@ -5,6 +5,11 @@ import "../app/globals.css";
 export default function Room() {
   const [messages, setMessages] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [IdInput, setIdInput] = useState(true);
+  const [PassInput, setPassInput] = useState(false);
+  const [socketId, setSocketId] = useState("");
+  const [socketPass, setSocketPass] = useState("");
+  const [userMessage, setUserMessage] = useState("");
 
   const preChat = [
     "If u already hav ur Socket Name & Password, then just use that",
@@ -13,14 +18,13 @@ export default function Room() {
     "And Password",
   ];
 
-  const arr = [1, 2, 3, 4, 5, 6, 7];
-
   useEffect(() => {
     setMessages([preChat[0]]);
   }, []);
 
   useEffect(() => {
-    if (currentIndex >= 3) return;
+    if (currentIndex >= preChat.length - 1) return;
+    if (currentIndex == 2 && socketId == "") return;
 
     const timer = setTimeout(() => {
       setMessages([...messages, preChat[currentIndex + 1]]);
@@ -28,7 +32,31 @@ export default function Room() {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [messages, preChat]);
+  }, [messages, preChat, socketId]);
+
+
+  useEffect(() => {
+    socketId !== "" &&
+      setMessages((prevMessages) => [...prevMessages, socketId]);
+
+    socketPass !== "" &&
+      setMessages((prevMessages) => [...prevMessages, socketPass]);
+  }, [socketId, socketPass]);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (IdInput) {
+      setSocketId(userMessage);
+      setIdInput(false);
+      setPassInput(true);
+      setUserMessage("");
+    } else if (PassInput) {
+      setSocketPass(userMessage);
+      // setIdInput(false);
+      setPassInput(false);
+      setUserMessage("");
+    }
+  };
 
   return (
     <div className="flex flex-col justify-between gap-[40px] items-center min-h-screen p-[40px]">
@@ -40,29 +68,47 @@ export default function Room() {
       </h1>
 
       <div
-        className="flex flex-col justify-end gap-[20px] w-full h-[500px] max-w-[600px] p-[20px] border"
+        className="flex flex-col justify-end gap-[20px] w-full  max-w-[600px] p-[20px] border overflow-y-scroll"
         // style={{ boxShadow: "0px 80px 60px -50px red inset" }}
       >
         {messages.map((message, index) => (
-          <div
-            key={index}
-            className="message relative block w-fit max-w-[80%] py-[14px] px-[20px] rounded-[20px] bg-[black] border-t-[1px] border-l-[1px] border-[#242424] z-[9]"
-          >
-            <p>{message}</p>
+          <div className="w-full" key={index}>
+            {message === socketId || message === socketPass ? (
+              <div className="w-full flex flex-col items-end">
+                <div className="my-message relative block w-fit max-w-[80%] py-[14px] px-[20px] rounded-[20px] bg-[#2b2b2b] border-t-[1px] border-r-[1px] border-[#3b3b3b] z-[9]">
+                  <p>{message}</p>
 
-            <div className="absolute block w-[20px] h-[20px] bg-[black] rounded-br-[4px] rotate-[45deg] left-[24px] bottom-[-9px]"></div>
+                  <div className="absolute block w-[20px] h-[20px] bg-[#2b2b2b] rounded-br-[4px] rotate-[45deg] right-[24px] bottom-[-9px]"></div>
+                </div>
+              </div>
+            ) : (
+              <div className="message relative block w-fit max-w-[80%] py-[14px] px-[20px] rounded-[20px] bg-[black] border-t-[1px] border-l-[1px] border-[#242424] z-[9]">
+                <p>{message}</p>
+
+                <div className="absolute block w-[20px] h-[20px] bg-[black] rounded-br-[4px] rotate-[45deg] left-[24px] bottom-[-9px]"></div>
+              </div>
+            )}
           </div>
         ))}
 
         <div
           className="w-full flex flex-row gap-[10px] mt-[60px] z-[10]"
-          style={{ boxShadow: "0px -40px 50px 0px #171717", background: "#171717" }}
+          style={{
+            boxShadow: "0px -40px 50px 0px #171717",
+            background: "#171717",
+          }}
         >
           <input
-            className="w-full bg-[black] text-[white] rounded-[50px] px-[12px] py-[8px]"
+            className="w-full min-h-[40px] bg-[black] text-[white] rounded-[15px] px-[12px] py-[8px]"
             type="text"
+            placeholder="Socket Name"
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
           />
-          <button className="min-w-[40px] min-h-[40px] rounded-full p-[0px] flex flex-col items-center justify-center text-center text-[black] bg-[#fff] active:scale-[90%]">
+          <button
+            className="min-w-[40px] min-h-[40px] rounded-l-[25px] rounded-r-[50px] p-[0px] flex flex-col items-center justify-center text-center text-[black] bg-[#fff] active:scale-[90%]"
+            onClick={handleSubmit}
+          >
             &#11166;
           </button>
         </div>
